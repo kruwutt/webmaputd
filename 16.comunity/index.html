@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css"><link rel="stylesheet" href="css/L.Control.Locate.min.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/b_line_1.js"></script>
+        <script src="data/village_2.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:22, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+        }
+        map.createPane('pane_GoogleSatellite_0');
+        map.getPane('pane_GoogleSatellite_0').style.zIndex = 400;
+        var layer_GoogleSatellite_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleSatellite_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 22,
+            minNativeZoom: 0,
+            maxNativeZoom: 19
+        });
+        layer_GoogleSatellite_0;
+        map.addLayer(layer_GoogleSatellite_0);
+        function pop_b_line_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">OBJECTID</th>\
+                        <td>' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">PTYPE</th>\
+                        <td>' + (feature.properties['PTYPE'] !== null ? autolinker.link(feature.properties['PTYPE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAMT</th>\
+                        <td>' + (feature.properties['NAMT'] !== null ? autolinker.link(feature.properties['NAMT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NAME</th>\
+                        <td>' + (feature.properties['NAME'] !== null ? autolinker.link(feature.properties['NAME'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Version</th>\
+                        <td>' + (feature.properties['Version'] !== null ? autolinker.link(feature.properties['Version'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Length</th>\
+                        <td>' + (feature.properties['Shape_Length'] !== null ? autolinker.link(feature.properties['Shape_Length'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Shape_Area</th>\
+                        <td>' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_b_line_1_0() {
+            return {
+                pane: 'pane_b_line_1',
+                opacity: 1,
+                color: 'rgba(226,245,13,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 5.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_b_line_1');
+        map.getPane('pane_b_line_1').style.zIndex = 401;
+        map.getPane('pane_b_line_1').style['mix-blend-mode'] = 'normal';
+        var layer_b_line_1 = new L.geoJson(json_b_line_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_b_line_1',
+            layerName: 'layer_b_line_1',
+            pane: 'pane_b_line_1',
+            onEachFeature: pop_b_line_1,
+            style: style_b_line_1_0,
+        });
+        bounds_group.addLayer(layer_b_line_1);
+        map.addLayer(layer_b_line_1);
+        function pop_village_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">fid</th>\
+                        <td>' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Id</th>\
+                        <td>' + (feature.properties['Id'] !== null ? autolinker.link(feature.properties['Id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">vcode</th>\
+                        <td>' + (feature.properties['vcode'] !== null ? autolinker.link(feature.properties['vcode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">vname</th>\
+                        <td>' + (feature.properties['vname'] !== null ? autolinker.link(feature.properties['vname'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">distric</th>\
+                        <td>' + (feature.properties['distric'] !== null ? autolinker.link(feature.properties['distric'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_village_2_0(feature) {
+            switch(String(feature.properties['vname'])) {
+                case 'ชุมชนเกษมราษฎร์':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(119,190,223,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนเกาะกลาง':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(158,217,128,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนคอวัง':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(216,34,68,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนเจริญธรรม':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(34,239,178,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนเจริญบัณฑิต':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(178,103,200,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนเจริญราษฎร์':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(84,210,226,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนเจษฎาบดินทร์':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,227,64,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนตลาดท่าเสา':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(146,108,217,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนท่าอิฐบน':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(46,227,134,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนท่าอิฐล่าง':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(183,214,87,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนธรรมกิจจาภิบาล':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(101,163,228,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนธรรมาธิปไตย':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(153,59,229,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนบรมอาสน์':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(47,237,18,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนบ้านเกาะ':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(235,151,127,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนไผ่สีทอง':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(128,219,154,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนพัฒนศึกษา':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,105,23,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนพาดวารี':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(240,223,136,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนฤดีเปรม':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(93,102,225,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนศิลาอาสน์ตะวันตก':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(213,43,185,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนศิลาอาสน์ตะวันออก':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(101,136,232,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนสมานมิตร':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(231,52,163,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนส่วนราชการ':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(223,47,44,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนสำราญฤทัย':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(197,114,200,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนหนองบัว':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(219,168,80,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนหนองผา':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(87,66,207,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนหน้าวิทยาลัยครู':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(204,16,94,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนหลัง รพช.':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(123,236,133,1.0)',
+                interactive: true,
+            }
+                    break;
+                case 'ชุมชนห้วยไผ่':
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(129,222,21,1.0)',
+                interactive: true,
+            }
+                    break;
+                default:
+                    return {
+                pane: 'pane_village_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(100,200,190,1.0)',
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_village_2');
+        map.getPane('pane_village_2').style.zIndex = 402;
+        map.getPane('pane_village_2').style['mix-blend-mode'] = 'normal';
+        var layer_village_2 = new L.geoJson(json_village_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_village_2',
+            layerName: 'layer_village_2',
+            pane: 'pane_village_2',
+            onEachFeature: pop_village_2,
+            style: style_village_2_0,
+        });
+        bounds_group.addLayer(layer_village_2);
+        map.addLayer(layer_village_2);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'village<br /><table><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนเกษมราษฎร0.png" /></td><td>ชุมชนเกษมราษฎร์</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนเกาะกลาง1.png" /></td><td>ชุมชนเกาะกลาง</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนคอวง2.png" /></td><td>ชุมชนคอวัง</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนเจรญธรรม3.png" /></td><td>ชุมชนเจริญธรรม</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนเจรญบณฑต4.png" /></td><td>ชุมชนเจริญบัณฑิต</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนเจรญราษฎร5.png" /></td><td>ชุมชนเจริญราษฎร์</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนเจษฎาบดนทร6.png" /></td><td>ชุมชนเจษฎาบดินทร์</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนตลาดทาเสา7.png" /></td><td>ชุมชนตลาดท่าเสา</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนทาอฐบน8.png" /></td><td>ชุมชนท่าอิฐบน</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนทาอฐลาง9.png" /></td><td>ชุมชนท่าอิฐล่าง</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนธรรมกจจาภบาล10.png" /></td><td>ชุมชนธรรมกิจจาภิบาล</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนธรรมาธปไตย11.png" /></td><td>ชุมชนธรรมาธิปไตย</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนบรมอาสน12.png" /></td><td>ชุมชนบรมอาสน์</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนบานเกาะ13.png" /></td><td>ชุมชนบ้านเกาะ</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนไผสทอง14.png" /></td><td>ชุมชนไผ่สีทอง</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนพฒนศกษา15.png" /></td><td>ชุมชนพัฒนศึกษา</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนพาดวาร16.png" /></td><td>ชุมชนพาดวารี</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนฤดเปรม17.png" /></td><td>ชุมชนฤดีเปรม</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนศลาอาสนตะวนตก18.png" /></td><td>ชุมชนศิลาอาสน์ตะวันตก</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนศลาอาสนตะวนออก19.png" /></td><td>ชุมชนศิลาอาสน์ตะวันออก</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนสมานมตร20.png" /></td><td>ชุมชนสมานมิตร</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนสวนราชการ21.png" /></td><td>ชุมชนส่วนราชการ</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนสำราญฤทย22.png" /></td><td>ชุมชนสำราญฤทัย</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนหนองบว23.png" /></td><td>ชุมชนหนองบัว</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนหนองผา24.png" /></td><td>ชุมชนหนองผา</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนหนาวทยาลยคร25.png" /></td><td>ชุมชนหน้าวิทยาลัยครู</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนหลงรพช26.png" /></td><td>ชุมชนหลัง รพช.</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_ชมชนหวยไผ27.png" /></td><td>ชุมชนห้วยไผ่</td></tr><tr><td style="text-align: center;"><img src="legend/village_2_28.png" /></td><td></td></tr></table>': layer_village_2,'<img src="legend/b_line_1.png" /> b_line': layer_b_line_1,"Google Satellite": layer_GoogleSatellite_0,}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
